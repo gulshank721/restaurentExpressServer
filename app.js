@@ -12,6 +12,20 @@ var promotionRouter = require('./routes/promotionRouter');
 
 var app = express();
 
+// database connection building
+const mongoose = require('mongoose');
+const Dishes = require('./models/dishes'); //require dishes model of schema
+
+const url = 'mongodb://localhost:27017/conFusion'; //connection string 
+// mongoose.Promise = global.Promise;
+const connect = mongoose.connect(url);   //getting connect
+
+
+connect.then((db) => {    //handling responce after connection either success or failure
+    console.log("Connected correctly to server");
+    // console.log(db);
+}, (err) => { console.log(err); });
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

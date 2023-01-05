@@ -16,9 +16,16 @@ var app = express();
 const mongoose = require('mongoose');
 const Dishes = require('./models/dishes'); //require dishes model of schema
 
-const url = 'mongodb://localhost:27017/conFusion'; //connection string 
+//connection string 
+// const url = 'mongodb://localhost:27017/conFusion'; 
+//instead of local database we here connect to cloud mongodb which atlas
+const url = 'mongodb+srv://gulshank721:txno9211@cluster0.eyxv6c7.mongodb.net/conFusion?retryWrites=true&w=majority';
+
 // mongoose.Promise = global.Promise;
-const connect = mongoose.connect(url);   //getting connect
+const connect = mongoose.connect(url,{
+   useNewUrlParser: true, useUnifiedTopology: true,
+   
+});   //getting connect
 
 
 connect.then((db) => {    //handling responce after connection either success or failure
@@ -34,6 +41,33 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+//authentication
+function auth(req,res,next){
+  console.log(req.headers);
+
+  var authHeader = req.headers.authorization;
+
+  if(!authHeader){
+    var err = new Error('you are not authenticated!');
+
+    res.setHeader('WWW-Authenticate','Basic');
+    err.status=401;
+    next(err);
+  }
+  var auth = new Buffer(authHeader.split(' ')[1],'base64').toString().split(':');
+  var username = auth[0];
+  var password = auth[1];
+
+  if(username=='admin' && password =='password'){  next(); 
+  }
+  else{
+    var err = new Error('you are not authenticated!');
+    res.setHeader('www=Authenticate','Basic');
+    err.status=401;
+    next(err);
+  } 
+}
+app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);

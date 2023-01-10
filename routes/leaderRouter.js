@@ -20,7 +20,7 @@ leaderRouter.route('/')
     .catch((err) => next(err));
 
 })
-.post(authenticate.verifyUser, (req,res,next)=>{
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('Will add the leader: '+req.body.name+' with details: '+req.body.description);
     Leaders.create(req.body)
     .then((leader)=>{
@@ -31,12 +31,12 @@ leaderRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(authenticate.verifyUser, (req,res,next)=>{
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /leader');
 })
 //dangerous authentication needed
-.delete(authenticate.verifyUser, (req,res,next)=>{
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('deleting all the  leaders');
     Leaders.remove({})  // this is mongoose function removing leaders collection from mongodb
     .then((resp) => {
@@ -66,11 +66,11 @@ leaderRouter.route('/:leaderId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(authenticate.verifyUser, (req,res,next)=>{
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /leaderId ');
 })
-.put(authenticate.verifyUser, (req,res,next)=>{
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.write('Updating the leader: '+req.params.leaderId+'\n');
     // res.end('will Update the leaders: '+req.body.name+' with details '+ req.body.description);
     Leaders.findByIdAndUpdate(req.params.leaderId,{
@@ -84,7 +84,7 @@ leaderRouter.route('/:leaderId')
     .catch((err) => next(err));
 })
 //dangerous authentication needed
-.delete(authenticate.verifyUser, (req,res,next)=>{
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('deleting leader:'+req.params.leaderId);
     Leaders.findByIdAndRemove(req.params.leaderId)
     .then((resp)=>{

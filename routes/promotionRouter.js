@@ -21,7 +21,7 @@ promotionRouter.route('/')
     .catch((err) => next(err));
 
 })
-.post(authenticate.verifyUser, (req,res,next)=>{
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('Will add the promotion: '+req.body.name+' with details: '+req.body.description);
     Promotions.create(req.body)
     .then((promotion)=>{
@@ -32,12 +32,12 @@ promotionRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(authenticate.verifyUser, (req,res,next)=>{
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /promotion');
 })
 //dangerous authentication needed
-.delete(authenticate.verifyUser, (req,res,next)=>{
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('deleting all the  promotions');
     Promotions.remove({})  // this is mongoose function removing Dishes collection from mongodb
     .then((resp) => {
@@ -67,11 +67,11 @@ promotionRouter.route('/:promotionId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(authenticate.verifyUser, (req,res,next)=>{
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /promotions ');
 })
-.put(authenticate.verifyUser, (req,res,next)=>{
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.write('Updating the promotion: '+req.params.promotionId+'\n');
     // res.end('will Update the pomotions: '+req.body.name+' with details '+ req.body.description);
     Promotions.findByIdAndUpdate(req.params.promotionId,{
@@ -85,7 +85,7 @@ promotionRouter.route('/:promotionId')
     .catch((err) => next(err));
 })
 //dangerous authentication needed
-.delete(authenticate.verifyUser, (req,res,next)=>{
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('deleting promotion:'+req.params.promotionId);
     Promotions.findByIdAndRemove(req.params.promotionId)
     .then((resp)=>{

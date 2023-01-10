@@ -1,6 +1,8 @@
 const express= require('express');
 const bodyParser = require('body-parser');
 
+const authenticate = require('../authenticate');
+
 const Leaders = require('../models/leaders');
 
 const leaderRouter = express.Router();
@@ -18,7 +20,7 @@ leaderRouter.route('/')
     .catch((err) => next(err));
 
 })
-.post((req,res,next)=>{
+.post(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Will add the leader: '+req.body.name+' with details: '+req.body.description);
     Leaders.create(req.body)
     .then((leader)=>{
@@ -29,12 +31,12 @@ leaderRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put((req,res,next)=>{
+.put(authenticate.verifyUser, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /leader');
 })
 //dangerous authentication needed
-.delete((req,res,next)=>{
+.delete(authenticate.verifyUser, (req,res,next)=>{
     // res.end('deleting all the  leaders');
     Leaders.remove({})  // this is mongoose function removing leaders collection from mongodb
     .then((resp) => {
@@ -64,11 +66,11 @@ leaderRouter.route('/:leaderId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post((req,res,next)=>{
+.post(authenticate.verifyUser, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /leaderId ');
 })
-.put((req,res,next)=>{
+.put(authenticate.verifyUser, (req,res,next)=>{
     // res.write('Updating the leader: '+req.params.leaderId+'\n');
     // res.end('will Update the leaders: '+req.body.name+' with details '+ req.body.description);
     Leaders.findByIdAndUpdate(req.params.leaderId,{
@@ -82,7 +84,7 @@ leaderRouter.route('/:leaderId')
     .catch((err) => next(err));
 })
 //dangerous authentication needed
-.delete((req,res,next)=>{
+.delete(authenticate.verifyUser, (req,res,next)=>{
     // res.end('deleting leader:'+req.params.leaderId);
     Leaders.findByIdAndRemove(req.params.leaderId)
     .then((resp)=>{

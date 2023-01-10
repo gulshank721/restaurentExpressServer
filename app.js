@@ -12,9 +12,10 @@ var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var leaderRouter = require('./routes/leaderRouter');
 var promotionRouter = require('./routes/promotionRouter');
-
+var config = require('./config');
 var passport = require('passport');
 var authenticate = require('./authenticate');
+
 
 var app = express();
 
@@ -25,7 +26,7 @@ const Dishes = require('./models/dishes'); //require dishes model of schema
 //connection string 
 // const url = 'mongodb://localhost:27017/conFusion'; 
 //instead of local database we here connect to cloud mongodb which atlas
-const url = 'mongodb+srv://gulshank721:txno9211@cluster0.eyxv6c7.mongodb.net/conFusion?retryWrites=true&w=majority';
+const url = config.mongoUrl;
 
 // mongoose.Promise = global.Promise;
 const connect = mongoose.connect(url,{
@@ -48,35 +49,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser('12345-67890-09876-54321'));
 
-app.use(session({
-  name: 'session-id',
-  secret: '12345-67890-09876-54321',
-  saveUninitialized: false,
-  resave: false,
-  store: new FileStore()
-}));
+// app.use(session({
+//   name: 'session-id',
+//   secret: '12345-67890-09876-54321',
+//   saveUninitialized: false,
+//   resave: false,
+//   store: new FileStore()
+// }));
 
 app.use(passport.initialize());
-app.use(passport.session())
+
+// app.use(passport.session())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 //authentication
 
-function auth (req, res, next) {
-  console.log(req.user);
+// function auth (req, res, next) {
+//   console.log(req.user);
 
-  if (!req.user) {
-    var err = new Error('You are not authenticated!');
-    err.status = 403;
-    next(err);
-  }
-  else {
-        next();
-  }
-}
-app.use(auth);
+//   if (!req.user) {
+//     var err = new Error('You are not authenticated!');
+//     err.status = 403;
+//     next(err);
+//   }
+//   else {
+//         next();
+//   }
+// }
+// app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
 

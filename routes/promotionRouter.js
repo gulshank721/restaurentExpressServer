@@ -4,15 +4,16 @@ const bodyParser = require('body-parser');
 const authenticate = require('../authenticate');
 
 const Promotions = require('../models/promotions');
-
+const cors = require('./cors');
 
 const promotionRouter = express.Router();
 promotionRouter.use(bodyParser.json());
 
 promotionRouter.route('/')
-.get((req,res,next)=>{
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req,res,next)=>{
     // res.end('Will send all the promotions to you!');
-    Promotions.find({})
+    Promotions.find(req.query)
     .then((promotions) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -21,7 +22,7 @@ promotionRouter.route('/')
     .catch((err) => next(err));
 
 })
-.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('Will add the promotion: '+req.body.name+' with details: '+req.body.description);
     Promotions.create(req.body)
     .then((promotion)=>{
@@ -32,12 +33,12 @@ promotionRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /promotion');
 })
 //dangerous authentication needed
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('deleting all the  promotions');
     Promotions.remove({})  // this is mongoose function removing Dishes collection from mongodb
     .then((resp) => {
@@ -52,12 +53,13 @@ promotionRouter.route('/')
 //with parameters(id)
 
 promotionRouter.route('/:promotionId')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // .all((req,res,next)=>{
 //     res.statusCode=200;
 //     res.setHeader('Content-Type','text/plain');
 //     next();
 //  })
-.get((req,res,next)=>{
+.get(cors.cors, (req,res,next)=>{
     // res.end('Will send all the promotions/:'+ req.params.promotionId  +' to you!');
     Promotions.findById(req.params.promotionId)
     .then((promotion)=>{
@@ -67,11 +69,11 @@ promotionRouter.route('/:promotionId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /promotions ');
 })
-.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.write('Updating the promotion: '+req.params.promotionId+'\n');
     // res.end('will Update the pomotions: '+req.body.name+' with details '+ req.body.description);
     Promotions.findByIdAndUpdate(req.params.promotionId,{
@@ -85,7 +87,7 @@ promotionRouter.route('/:promotionId')
     .catch((err) => next(err));
 })
 //dangerous authentication needed
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('deleting promotion:'+req.params.promotionId);
     Promotions.findByIdAndRemove(req.params.promotionId)
     .then((resp)=>{

@@ -16,7 +16,7 @@ dishRouter.route('/')
 .get(cors.cors, (req,res,next)=>{
     
     Dishes.find(req.query)// this is mongoose function
-    .populate('comments.author') // including the author field in commments.
+    // .populate('comments.author') // including the author field in commments.
     .then((dishes) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -59,7 +59,7 @@ dishRouter.route('/:dishId')
 .get(cors.cors, (req,res,next)=>{
     // res.end('Will send all the dishes/:'+ req.params.dishId  +' to you!');
     Dishes.findById(req.params.dishId)
-    .populate('comments.author')
+    // .populate('comments.author')
     .then((dish) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');

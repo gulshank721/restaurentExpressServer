@@ -19,9 +19,11 @@ var commentSchema = new Schema({
         ref: 'User',
        
     },
-    dish:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Dish'
+    dishId:{
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref:'Dish'
+        type: String,
+        required: true
     }
 }, {
     timestamps: true

@@ -15,6 +15,7 @@ commentRouter.route('/')
 .get(cors.cors, (req,res,next) => {
     Comments.find(req.query)
     .populate('author')
+    // .populate('dishId')
     .then((comments) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -25,10 +26,12 @@ commentRouter.route('/')
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     if (req.body != null) {
         req.body.author = req.user._id;
+        // req.body.dishId = req.dish._id;
         Comments.create(req.body)
         .then((comment) => {
             Comments.findById(comment._id)
             .populate('author')
+            // .populate('dishId')
             .then((comment) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -63,6 +66,7 @@ commentRouter.route('/:commentId')
 .get(cors.cors, (req,res,next) => {
     Comments.findById(req.params.commentId)
     .populate('author')
+    // .populate('dishId')
     .then((comment) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -84,12 +88,14 @@ commentRouter.route('/:commentId')
                 return next(err);
             }
             req.body.author = req.user._id;
+            // req.body.dishId = req.dish._id;
             Comments.findByIdAndUpdate(req.params.commentId, {
                 $set: req.body
             }, { new: true })
             .then((comment) => {
                 Comments.findById(comment._id)
                 .populate('author')
+                // .populate('dishId')
                 .then((comment) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');

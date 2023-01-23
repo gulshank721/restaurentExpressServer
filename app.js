@@ -40,7 +40,10 @@ const Dishes = require('./models/dishes'); //require dishes model of schema
 //connection string 
 // const url = 'mongodb://localhost:27017/conFusion'; 
 //instead of local database we here connect to cloud mongodb which atlas
-const url = config.mongoUrl;
+// const url = config.mongoUrl;
+const dotenv =require('dotenv') ;
+dotenv.config();
+const url = process.env.MONGO_URL;
 
 // mongoose.Promise = global.Promise;
 const connect = mongoose.connect(url,{

@@ -24,14 +24,14 @@ var authenticate = require('./authenticate');
 var app = express();
 
 //redirecting incomming to secure if not
-app.all('*', (req,res,next) =>{
-  if(req.secure){
-    return next();
-  }
-  else{
-    res.redirect(307, 'https://' + req.hostname + ':'+ app.get('secPort') + req.url);
-  }
-});
+// app.all('*', (req,res,next) =>{
+//   if(req.secure){
+//     return next();
+//   }
+//   else{
+//     res.redirect(307, 'https://' + req.hostname + ':'+ app.get('secPort') + req.url);
+//   }
+// });
 
 // database connection building
 const mongoose = require('mongoose');

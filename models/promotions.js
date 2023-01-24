@@ -1,8 +1,9 @@
+const { Int32 } = require('bson');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-require('mongoose-currency').loadType(mongoose); // mongoose-currency adds an external schema type like currency
-const Currency = mongoose.Types.Currency;        // to suport currency type field.(like price in this case)
+// require('mongoose-currency').loadType(mongoose); // mongoose-currency adds an external schema type like currency
+// const Currency = mongoose.Types.Currency;        // to suport currency type field.(like price in this case)
 
 // {
 //     "name": "Weekend Grand Buffet",
@@ -33,7 +34,7 @@ var promotionSchema = Schema({
         default: ''
     },
     price: {
-        type: Currency,
+        type: Number,
         required: true,
         min: 0
     },

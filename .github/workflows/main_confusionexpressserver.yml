@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'conFusionExpressServer'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C464519F5EA542A69D8451B189C8334B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5F5EB3FD3A0E4B3480F4B7CE6035F309 }}
           package: .
